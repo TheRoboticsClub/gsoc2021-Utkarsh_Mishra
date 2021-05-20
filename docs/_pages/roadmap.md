@@ -7,7 +7,7 @@ sidebar:
   nav: "docs"
 ---
 
-# Project name
+# Autonomous Driving drone with Gazebo using Deep Learning Techniques
 
 ## Abstract
 

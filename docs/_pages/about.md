@@ -6,9 +6,9 @@ sidebar:
   nav: "docs"
 ---
 
-## Project #8
+## Autonomous Driving drone with Gazebo using Deep Learning Techniques
 
-JdeRobot 
+Autonomous Driving drone with Gazebo using Deep Learning techniques
 
 ### ORGANIZATION
 JdeRobot - Universidad Rey Juan Carlos

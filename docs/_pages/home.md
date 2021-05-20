@@ -8,7 +8,7 @@ header:
     #- label: "<i class='fas fa-download'></i> Install now"
     #  url: "/installation/"
 excerpt: 
-  Project 8
+  Autonomous Driving drone with Gazebo using Deep Learning techniques
 feature_row:
   - image_path: /assets/images/cover/logbook.jpg
     alt: "Logbook"
@@ -38,4 +38,14 @@ youTube_id: ID7qaEcIu4k
 
 {% include feature_row %}
 
-Hello!
+Hola Amigos!
+
+This project focusses on introducing Autonomous Driving drones to the Behavior Metrics framework. Various Deep Learning and Reinforcement Learning implementations are carried out and tested using ROS Noetic, Gazebo and OpenAI gym.
+
+In the following [set of blogs](https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/logbook/) is explained the progress through the program.
+
+Mentors:
+
+* Sergio Paniego Blanco
+
+* José María Cañas
