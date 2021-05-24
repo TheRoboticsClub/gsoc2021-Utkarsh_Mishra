@@ -8,16 +8,17 @@ import torch.optim as optim
 
 from DQN.dqn_step import dqn_step
 from models.policies import QPolicy
+from models.image_policies import QPolicyImage
 from utils.replay_memory import Memory
-from utils.env_util import get_env_info
+from utils.env_util import get_env_info, get_pixel_env_info
 from utils.file_util import check_path
 from utils.torch_util import device, FLOAT, LONG
-from utils.zfilter import ZFilter
 
 
 class DQN:
     def __init__(self,
                  env_id,
+                 obs_type='pixel',
                  render=False,
                  num_process=1,
                  memory_size=1000000,
@@ -46,41 +47,55 @@ class DQN:
         self.epsilon = epsilon
         self.seed = seed
         self.model_path = model_path
+        self.obs_type = obs_type
 
         self._init_model()
 
     def _init_model(self):
         """init model from parameters"""
-        self.env, env_continuous, num_states, self.num_actions = get_env_info(
-            self.env_id)
-        assert not env_continuous, "DQN is only applicable to discontinuous environment !!!!"
 
-        # seeding
-        np.random.seed(self.seed)
-        torch.manual_seed(self.seed)
-        self.env.seed(self.seed)
+        if self.obs_type == 'pixel':
+            self.env, env_continuous, obs_shape, num_states, self.num_actions = get_pixel_env_info(self.env_id)
+            assert not env_continuous, "DQN is only applicable to discontinuous environment !!!!"
 
-        # initialize networks
-        self.value_net = QPolicy(num_states, self.num_actions).to(device)
-        self.value_net_target = QPolicy(num_states, self.num_actions).to(device)
+            # seeding
+            np.random.seed(self.seed)
+            torch.manual_seed(self.seed)
+            self.env.seed(self.seed)
 
-        self.running_state = ZFilter((num_states,), clip=5)
+            # initialize networks
+            self.value_net = QPolicyImage(obs_shape, 32, num_states, self.num_actions).to(device)
+            self.value_net_target = QPolicyImage(obs_shape, 32, num_states, self.num_actions).to(device)
+        else:
+            self.env, env_continuous, num_states, self.num_actions = get_env_info(
+                self.env_id)
+            assert not env_continuous, "DQN is only applicable to discontinuous environment !!!!"
+
+            # seeding
+            np.random.seed(self.seed)
+            torch.manual_seed(self.seed)
+            self.env.seed(self.seed)
+
+            # initialize networks
+            self.value_net = QPolicy(num_states, self.num_actions).to(device)
+            self.value_net_target = QPolicy(num_states, self.num_actions).to(device)
 
         # load model if necessary
         if self.model_path:
             print("Loading Saved Model {}_dqn.p".format(self.env_id))
-            self.value_net, self.running_state = pickle.load(
+            self.value_net = pickle.load(
                 open('{}/{}_dqn.p'.format(self.model_path, self.env_id), "rb"))
 
         self.value_net_target.load_state_dict(self.value_net.state_dict())
 
         self.optimizer = optim.Adam(self.value_net.parameters(), lr=self.lr_q)
 
-    def choose_action(self, state):
+    def choose_action(self, image, state):
+        image = FLOAT(image).unsqueeze(0).to(device)
         state = FLOAT(state).unsqueeze(0).to(device)
         if np.random.uniform() <= self.epsilon:
             with torch.no_grad():
-                action = self.value_net.get_action(state)
+                action = self.value_net.get_action(image, state)
             action = action.cpu().numpy()[0]
         else:  # choose action greedy
             action = np.random.randint(0, self.num_actions)
@@ -88,15 +103,14 @@ class DQN:
 
     def eval(self, i_iter, render=False):
         """evaluate model"""
-        state = self.env.reset()
+        image, state = self.env.reset()
         test_reward = 0
         while True:
             if render:
                 self.env.render()
-            # state = self.running_state(state)
-            action = self.choose_action(state)
-            state, reward, done, _ = self.env.step(action)
-
+            action = self.choose_action(image, state)
+            states, reward, done, _ = self.env.step(action)
+            image, state = states
             test_reward += reward
             if done:
                 break
@@ -114,8 +128,7 @@ class DQN:
         max_episode_reward = float('-inf')
 
         while num_steps < self.step_per_iter:
-            state = self.env.reset()
-            # state = self.running_state(state)
+            image, state = self.env.reset()
             episode_reward = 0
 
             for t in range(10000):
@@ -125,13 +138,13 @@ class DQN:
                 if global_steps < self.explore_size:  # explore
                     action = self.env.action_space.sample()
                 else:  # choose according to target net
-                    action = self.choose_action(state)
+                    action = self.choose_action(image, state)
 
-                next_state, reward, done, _ = self.env.step(action)
-                # next_state = self.running_state(next_state)
+                next_states, reward, done, _ = self.env.step(action)
+                next_image, next_state = next_states
                 mask = 0 if done else 1
                 # ('state', 'action', 'reward', 'next_state', 'mask', 'log_prob')
-                self.memory.push(state, action, reward, next_state, mask, None)
+                self.memory.push(image, state, action, reward, next_image, next_state, mask, None)
 
                 episode_reward += reward
                 global_steps += 1
@@ -177,17 +190,19 @@ class DQN:
         writer.add_scalar("num steps", log['num_steps'], i_iter)
 
     def update(self, batch):
+        batch_image = FLOAT(batch.image).to(device)
         batch_state = FLOAT(batch.state).to(device)
-        batch_action = LONG(batch.action).to(device)
+        batch_action = FLOAT(batch.action).to(device)
         batch_reward = FLOAT(batch.reward).to(device)
+        batch_next_image = FLOAT(batch.next_image).to(device)
         batch_next_state = FLOAT(batch.next_state).to(device)
         batch_mask = FLOAT(batch.mask).to(device)
 
-        alg_step_stats = dqn_step(self.value_net, self.optimizer, self.value_net_target, batch_state, batch_action,
-                                  batch_reward, batch_next_state, batch_mask, self.gamma)
+        alg_step_stats = dqn_step(self.value_net, self.optimizer, self.value_net_target, batch_image, batch_state, batch_action,
+                                  batch_reward, batch_next_image, batch_next_state, batch_mask, self.gamma)
 
     def save(self, save_path):
         """save model"""
         check_path(save_path)
-        pickle.dump((self.value_net, self.running_state),
+        pickle.dump((self.value_net),
                     open('{}/{}_dqn.p'.format(save_path, self.env_id), 'wb'))

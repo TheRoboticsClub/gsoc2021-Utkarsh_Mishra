@@ -8,26 +8,28 @@ from DQN.dqn import DQN
 from DDPG.ddpg import DDPG
 from PPO.ppo import PPO
 
+import sample_env
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--env_id", type=str, default="MountainCar-v0", help="Environment Id")
+    parser.add_argument("--env_id", type=str, default="sampleEnv-v0", help="Environment Id")
     parser.add_argument("--algorithm", type=str, default="DQN", help="Algorithm to run")
     parser.add_argument("--render", type=bool, default=False, help="Render environment or not")
     parser.add_argument("--num_process", type=int, default=1, help="Number of process to run environment")
     parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate for Policy Net")
     parser.add_argument("--gamma", type=float, default=0.99, help="Discount factor")
     parser.add_argument("--epsilon", type=float, default=0.90, help="Probability controls greedy action")
-    parser.add_argument("--explore_size", type=int, default=10000, help="Explore steps before execute deterministic policy")
+    parser.add_argument("--explore_size", type=int, default=1000, help="Explore steps before execute deterministic policy")
     parser.add_argument("--memory_size", type=int, default=1000000, help="Size of replay memory")
     parser.add_argument("--step_per_iter", type=int, default=1000, help="Number of steps of interaction in each iteration")
     parser.add_argument("--batch_size", type=int, default=256, help="Batch size")
     parser.add_argument("--min_update_step", type=int, default=1000, help="Minimum interacts for updating")
     parser.add_argument("--update_target_gap", type=int, default=50, help="Steps between updating target q net")
     parser.add_argument("--max_iter", type=int, default=500, help="Maximum iterations to run")
-    parser.add_argument("--eval_iter", type=int, default=50, help="Iterations to evaluate the model")
-    parser.add_argument("--save_iter", type=int, default=50, help="Iterations to save the model")
+    parser.add_argument("--eval_iter", type=int, default=1, help="Iterations to evaluate the model")
+    parser.add_argument("--save_iter", type=int, default=1, help="Iterations to save the model")
     parser.add_argument("--model_path", type=str, default="trained_models", help="Directory to store model")
     parser.add_argument("--log_path", type=str, default="./log/", help="Directory to save logs")
     parser.add_argument("--seed", type=int, default=123, help="Seed for reproducing")

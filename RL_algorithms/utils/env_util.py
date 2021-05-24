@@ -19,7 +19,7 @@ def get_env_info(env_id, unwrap=False):
     env = gym.make(env_id)
     if unwrap:
         env = env.unwrapped
-    num_states = env.observation_space.shape[0]
+    num_states = env.observation_space.shape
     env_continuous = False
     if type(env.action_space) == Discrete:
         num_actions = env.action_space.n
@@ -28,3 +28,19 @@ def get_env_info(env_id, unwrap=False):
         env_continuous = True
 
     return env, env_continuous, num_states, num_actions
+
+def get_pixel_env_info(env_id, unwrap=False):
+    env = gym.make(env_id)
+    if unwrap:
+        env = env.unwrapped
+    obs_shape = env.observation_space.shape
+    env_continuous = False
+    if type(env.action_space) == Discrete:
+        num_actions = env.action_space.n
+    else:
+        num_actions = env.action_space.shape[0]
+        env_continuous = True
+
+    num_states = 2
+
+    return env, env_continuous, obs_shape, num_states, num_actions

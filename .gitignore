@@ -4,3 +4,7 @@ __pycache__/
 */log/
 
 */trained_models/
+
+*/*.egg-info
+
+*/datasets/

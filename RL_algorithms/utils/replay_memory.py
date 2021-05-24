@@ -2,7 +2,7 @@ import random
 from collections import namedtuple, deque
 
 Transition = namedtuple(
-    'Transition', ('state', 'action', 'reward', 'next_state', 'mask', 'log_prob'))
+    'Transition', ('image', 'state', 'action', 'reward', 'next_image', 'next_state', 'mask', 'log_prob'))
 
 
 class Memory(object):

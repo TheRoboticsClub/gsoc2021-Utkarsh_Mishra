@@ -8,18 +8,20 @@ import torch.optim as optim
 
 from models.policies import PPOPolicy, DiscretePolicy
 from models.values import PPOValue
+from models.image_policies import PPOPolicyImage, DiscretePolicyImage
+from models.image_values import PPOValueImage
 from PPO.ppo_step import ppo_step
 from utils.GAE import estimate_advantages
 from utils.MemoryCollector import MemoryCollector
-from utils.env_util import get_env_info
+from utils.env_util import get_env_info, get_pixel_env_info
 from utils.file_util import check_path
 from utils.torch_util import device, FLOAT
-from utils.zfilter import ZFilter
 
 
 class PPO:
     def __init__(self,
                  env_id,
+                 obs_type='pixel',
                  render=False,
                  num_process=4,
                  min_batch_size=2048,
@@ -44,6 +46,7 @@ class PPO:
         self.lr_p = lr_p
         self.lr_v = lr_v
         self.min_batch_size = min_batch_size
+        self.obs_type = obs_type
 
         self.model_path = model_path
         self.seed = seed
@@ -51,29 +54,35 @@ class PPO:
 
     def _init_model(self):
         """init model from parameters"""
-        self.env, env_continuous, num_states, num_actions = get_env_info(
-            self.env_id)
-
         # seeding
         torch.manual_seed(self.seed)
         self.env.seed(self.seed)
+        if self.obs_type == 'pixel':
+            self.env, env_continuous, obs_shape, num_states, num_actions = get_pixel_env_info(self.env_id)
 
-        if env_continuous:
-            self.policy_net = PPOPolicy(num_states, num_actions).to(device)
+            if env_continuous:
+                self.policy_net = PPOPolicyImage(obs_shape, 32, num_states, num_actions).to(device)
+            else:
+                self.policy_net = DiscretePolicyImage(obs_shape, 32, num_states, num_actions).to(device)
+
+            self.value_net = PPOValueImage(obs_shape, 32, num_states).to(device)
         else:
-            self.policy_net = DiscretePolicy(
-                num_states, num_actions).to(device)
+            self.env, env_continuous, num_states, num_actions = get_env_info(self.env_id)
 
-        self.value_net = PPOValue(num_states).to(device)
-        self.running_state = ZFilter((num_states,), clip=5)
+            if env_continuous:
+                self.policy_net = PPOPolicy(num_states[0], num_actions).to(device)
+            else:
+                self.policy_net = DiscretePolicy(
+                    num_states[0], num_actions).to(device)
+
+            self.value_net = PPOValue(num_states[0]).to(device)
 
         if self.model_path:
             print("Loading Saved Model {}_ppo.p".format(self.env_id))
-            self.policy_net, self.value_net, self.running_state = pickle.load(
+            self.policy_net, self.value_net = pickle.load(
                 open('{}/{}_ppo.p'.format(self.model_path, self.env_id), "rb"))
 
         self.collector = MemoryCollector(self.env, self.policy_net, render=self.render,
-                                         running_state=self.running_state,
                                          num_process=self.num_process)
 
         self.optimizer_p = optim.Adam(
@@ -81,24 +90,25 @@ class PPO:
         self.optimizer_v = optim.Adam(
             self.value_net.parameters(), lr=self.lr_v)
 
-    def choose_action(self, state):
+    def choose_action(self, image, state):
         """select action"""
+        image = FLOAT(image).unsqueeze(0).to(device)
         state = FLOAT(state).unsqueeze(0).to(device)
         with torch.no_grad():
-            action, log_prob = self.policy_net.get_action_log_prob(state)
+            action, log_prob = self.policy_net.get_action_log_prob(image, state)
         
         action = action.cpu().numpy()[0]
         return action
 
     def eval(self, i_iter, render=False):
-        state = self.env.reset()
+        image, state = self.env.reset()
         test_reward = 0
         while True:
             if render:
                 self.env.render()
-            state = self.running_state(state)
-            action = self.choose_action(state)
-            state, reward, done, _ = self.env.step(action)
+            action = self.choose_action(image, state)
+            states, reward, done, _ = self.env.step(action)
+            image, state = states
 
             test_reward += reward
             if done:
@@ -123,6 +133,7 @@ class PPO:
 
         batch = memory.sample()  # sample all items in memory
         #  ('state', 'action', 'reward', 'next_state', 'mask', 'log_prob')
+        batch_image = FLOAT(batch.image).to(device)
         batch_state = FLOAT(batch.state).to(device)
         batch_action = FLOAT(batch.action).to(device)
         batch_reward = FLOAT(batch.reward).to(device)
@@ -130,7 +141,7 @@ class PPO:
         batch_log_prob = FLOAT(batch.log_prob).to(device)
 
         with torch.no_grad():
-            batch_value = self.value_net(batch_state)
+            batch_value = self.value_net(batch_image, batch_state)
 
         batch_advantage, batch_return = estimate_advantages(batch_reward, batch_mask, batch_value, self.gamma,
                                                             self.tau)
@@ -148,7 +159,7 @@ class PPO:
                 for i in range(mini_batch_num):
                     ind = index[
                         slice(i * self.ppo_mini_batch_size, min(batch_size, (i + 1) * self.ppo_mini_batch_size))]
-                    state, action, returns, advantages, old_log_pis = batch_state[ind], batch_action[ind], \
+                    image, state, action, returns, advantages, old_log_pis = batch_image[ind], batch_state[ind], batch_action[ind], \
                         batch_return[
                         ind], batch_advantage[ind], \
                         batch_log_prob[
@@ -156,13 +167,14 @@ class PPO:
 
                     alg_step_stats = ppo_step(self.policy_net, self.value_net, self.optimizer_p, self.optimizer_v,
                                               1,
+                                              image,
                                               state,
                                               action, returns, advantages, old_log_pis, self.clip_epsilon,
                                               1e-3)
         else:
             for _ in range(self.ppo_epochs):
                 alg_step_stats = ppo_step(self.policy_net, self.value_net, self.optimizer_p, self.optimizer_v, 1,
-                                          batch_state, batch_action, batch_return, batch_advantage, batch_log_prob,
+                                          batch_image, batch_state, batch_action, batch_return, batch_advantage, batch_log_prob,
                                           self.clip_epsilon,
                                           1e-3)
 
@@ -171,5 +183,5 @@ class PPO:
     def save(self, save_path):
         """save model"""
         check_path(save_path)
-        pickle.dump((self.policy_net, self.value_net, self.running_state),
+        pickle.dump((self.policy_net, self.value_net),
                     open('{}/{}_ppo.p'.format(save_path, self.env_id), 'wb'))

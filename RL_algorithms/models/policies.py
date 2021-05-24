@@ -30,18 +30,8 @@ class QPolicy(nn.Module):
         return q_values
 
     def get_action(self, states):
-        """
-        >>>a = torch.rand(3, 4)
-        tensor([[0.3643, 0.7805, 0.6098, 0.6551],
-        [0.3953, 0.8059, 0.4277, 0.0126],
-        [0.2667, 0.0109, 0.0467, 0.5328]])
-        >>>a.max(dim=1)[1]
-        tensor([1, 1, 3])
-        :param states:
-        :return: max_action (tensor)
-        """
         q_values = self.forward(states, )
-        max_action = q_values.max(dim=1)[1]  # action index with largest q values
+        max_action = q_values.max(dim=1)[1]
         return max_action
 
 class DDPGPolicy(nn.Module):

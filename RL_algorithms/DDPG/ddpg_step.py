@@ -7,16 +7,16 @@ from utils.torch_util import get_flat_params, set_flat_params
 
 
 def ddpg_step(policy_net, policy_net_target, value_net, value_net_target, optimizer_policy, optimizer_value,
-              states, actions, rewards, next_states, masks, gamma, polyak):
+              images, states, actions, rewards, next_images, next_states, masks, gamma, polyak):
     masks = masks.unsqueeze(-1)
     rewards = rewards.unsqueeze(-1)
     """update critic"""
 
-    values = value_net(states, actions)
+    values = value_net(images, states, actions)
 
     with torch.no_grad():
         target_next_values = value_net_target(
-            next_states, policy_net_target(next_states))
+            next_images, next_states, policy_net_target(next_images, next_states))
         target_values = rewards + gamma * masks * target_next_values
     value_loss = nn.MSELoss()(values, target_values)
 
@@ -26,7 +26,7 @@ def ddpg_step(policy_net, policy_net_target, value_net, value_net_target, optimi
 
     """update actor"""
 
-    policy_loss = - value_net(states, policy_net(states)).mean()
+    policy_loss = - value_net(images, states, policy_net(images, states)).mean()
     optimizer_policy.zero_grad()
     policy_loss.backward()
     optimizer_policy.step()

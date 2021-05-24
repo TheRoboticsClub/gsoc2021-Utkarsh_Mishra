@@ -9,7 +9,7 @@ from utils.replay_memory import Memory
 from utils.torch_util import device, FLOAT
 
 
-def collect_samples(pid, queue, env, policy, render, running_state, custom_reward, min_batch_size):
+def collect_samples(pid, queue, env, policy, render, custom_reward, min_batch_size):
     torch.set_num_threads(1)
     if pid > 0:
         torch.manual_seed(torch.randint(0, 5000, (1,)) * pid)
@@ -27,30 +27,28 @@ def collect_samples(pid, queue, env, policy, render, running_state, custom_rewar
     total_reward = 0
 
     while num_steps < min_batch_size:
-        state = env.reset()
+        image, state = env.reset()
         episode_reward = 0
-        if running_state:
-            state = running_state(state)
 
         for t in range(10000):
             if render:
                 env.render()
+            image_tensor = FLOAT(image).unsqueeze(0)
             state_tensor = FLOAT(state).unsqueeze(0)
+
             with torch.no_grad():
-                action, log_prob = policy.get_action_log_prob(state_tensor)
+                action, log_prob = policy.get_action_log_prob(image_tensor, state_tensor)
             action = action.cpu().numpy()[0]
             log_prob = log_prob.cpu().numpy()[0]
-            next_state, reward, done, _ = env.step(action)
+            next_states, reward, done, _ = env.step(action)
+            next_image, next_state = next_states
             if custom_reward:
                 reward = custom_reward(state, action)
             episode_reward += reward
 
-            if running_state:
-                next_state = running_state(next_state)
-
             mask = 0 if done else 1
             # ('state', 'action', 'reward', 'next_state', 'mask', 'log_prob')
-            memory.push(state, action, reward, next_state, mask, log_prob)
+            memory.push(image, state, action, reward, next_image, next_state, mask, log_prob)
             num_steps += 1
             if done or num_steps >= min_batch_size:
                 break
@@ -91,10 +89,9 @@ def merge_log(log_list):
 
 
 class MemoryCollector:
-    def __init__(self, env, policy, render=False, running_state=None, custom_reward=None, num_process=1):
+    def __init__(self, env, policy, render=False, custom_reward=None, num_process=1):
         self.env = env
         self.policy = policy
-        self.running_state = running_state
         self.custom_reward = custom_reward
         self.render = render
         self.num_process = num_process
@@ -110,7 +107,7 @@ class MemoryCollector:
         for i in range(self.num_process - 1):
             # don't render other parallel processes
             worker_args = (i + 1, queue, self.env, self.policy,
-                           False, self.running_state, self.custom_reward, process_batch_size)
+                           False, self.custom_reward, process_batch_size)
             p = Process(target=collect_samples, args=worker_args)
             workers.append(p)
 
@@ -118,7 +115,7 @@ class MemoryCollector:
             worker.start()
 
         memory, log = collect_samples(0, None, self.env, self.policy,
-                                      self.render, self.running_state, self.custom_reward, process_batch_size)
+                                      self.render, self.custom_reward, process_batch_size)
 
         worker_logs = [None] * len(workers)
         worker_memories = [None] * len(workers)
