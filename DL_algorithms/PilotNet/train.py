@@ -3,97 +3,155 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision
 from torchvision import transforms
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, SubsetRandomSampler
+from torch.utils.tensorboard import SummaryWriter
 
-from PilotNet.utils.processing import *
+from utils.processing import *
+from utils.pilot_net_dataset import PilotNetDataset
+from utils.pilotnet import PilotNet
+
+import argparse
+from PIL import Image
 
 import json
 import numpy as np
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--data_dir", type=str, default='../datasets/complete_dataset', help="Directory to find Data")
+    parser.add_argument("--curve_dir", type=str, default='../datasets/curves_only', help="Directory to find Curves data")
+    parser.add_argument("--model_path", type=str, default='./trained_models', help="Directory to store model")
+    parser.add_argument("--base_dir", type=str, default='./log/', help="Directory to store tensorboard")
+
+    parser.add_argument("--num_epochs", type=int, default=5, help="Number of Epochs")
+    parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate for Policy Net")
+    parser.add_argument("--test_split", type=float, default=0.2, help="Train test Split")
+    parser.add_argument("--shuffle", type=bool, default=False, help="Shuffle dataset")
+    parser.add_argument("--batch_size", type=int, default=256, help="Batch size")
+    parser.add_argument("--save_iter", type=int, default=50, help="Iterations to save the model")
+    parser.add_argument("--seed", type=int, default=123, help="Seed for reproducing")
+
+    args = parser.parse_args()
+    return args
+
 if __name__=="__main__":
 
+    args = parse_args()
+
+    # Base Directory
+    path_to_data = args.data_dir
+    path_to_data_curves = args.curve_dir
+    model_save_dir = args.model_path
+    base_dir = args.base_dir
+
+    check_path(model_save_dir)
+    check_path(base_dir)
+
+    # Hyperparameters
+    num_epochs = args.num_epochs
+    batch_size = args.batch_size
+    learning_rate = args.lr
+    test_split = args.test_split
+    shuffle_dataset = args.shuffle
+    save_iter = args.save_iter
+    random_seed = args.seed
+
+    # Device Selection (CPU/GPU)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    FLOAT = torch.FloatTensor
+
+    # Tensorboard Initialization
+    writer = SummaryWriter(base_dir)
+
+    # Define data transformations
+    transformations = transforms.Compose([
+                                    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
+                                    transforms.GaussianBlur(5, sigma=(0.1, 2.0)),
+                                    transforms.ToTensor()
+                                ])
     # Load data
-    images, data = load_data('../datasets/complete_dataset')
-    images_curve, data_curve = load_data('../datasets/curves_only')
+    dataset = PilotNetDataset(path_to_data, path_to_data_curves, transformations)
 
-    # CHANGE type_image
-    type_image = 'cropped'
-    #type_image='normal'
+    # Creating data indices for training and test splits:
+    dataset_size = len(dataset)
+    indices = list(range(dataset_size))
+    split = int(np.floor(test_split * dataset_size))
+    if shuffle_dataset :
+        np.random.seed(random_seed)
+        np.random.shuffle(indices)
+    train_indices, test_split = indices[split:], indices[:split]
 
-    # Preprocess images
-    array_imgs = []
-    array_imgs = get_images(images, type_image, array_imgs)
-    array_imgs = get_images(images_curve, type_image, array_imgs)
-    # Preprocess json
-    array_annotations = []
-    array_annotations = parse_json(data, array_annotations)
-    array_annotations = parse_json(data_curve, array_annotations)
+    # Creating PT data samplers and loaders:
+    train_sampler = SubsetRandomSampler(train_indices)
+    test_sampler = SubsetRandomSampler(test_split)
+
+    train_loader = DataLoader(dataset, batch_size=batch_size, sampler=train_sampler)
+    test_loader = DataLoader(dataset, batch_size=batch_size, sampler=test_sampler)
+
+    # Load Model
+    pilotModel = PilotNet(dataset.image_shape, dataset.num_labels).to(device)
+
+    # Loss and optimizer
+    criterion = nn.MSELoss()
+    optimizer = torch.optim.Adam(pilotModel.parameters(), lr=learning_rate)
+
+    # Train the model
+    total_step = len(train_loader)
+    loss_list = []
+    acc_list = []
+    global_iter = 0
+    for epoch in range(num_epochs):
+        for i, (images, labels) in enumerate(train_loader):
+            
+            images = FLOAT(images).to(device)
+            labels = FLOAT(labels.float()).to(device)
+            
+            # Run the forward pass
+            outputs = pilotModel(images)
+            loss = criterion(outputs, labels)
+            current_loss = loss.item()
+
+            # Backprop and perform Adam optimisation
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            # Track the accuracy
+            total = labels.size(0)
+            correct = (torch.linalg.norm(outputs - labels) < 0.1).sum().item()
+            current_acc = (correct / total)
+
+            if global_iter % save_iter == 0:
+                torch.save(pilotModel.state_dict(), model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed))
+
+            global_iter += 1
+
+            writer.add_scalar("performance/loss", current_loss, global_iter)
+            writer.add_scalar("performance/accuracy", current_acc, global_iter)
+            writer.add_scalar("training/epochs", epoch+1, global_iter)
+
+            if (i + 1) % 100 == 0:
+                print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Accuracy: {:.2f}%'
+                    .format(epoch + 1, num_epochs, i + 1, total_step, loss.item(),
+                            (correct / total) * 100))
+
+    # Test the model
+    pilotModel.eval()
+    with torch.no_grad():
+        correct = 0
+        total = 0
+        for images, labels in test_loader:
+            images = FLOAT(images).to(device)
+            labels = FLOAT(labels.float()).to(device)
+            outputs = pilotModel(images)
+            total += labels.size(0)
+            correct += (torch.linalg.norm(outputs - labels) < 0.1).sum().item()
+
+        print('Test Accuracy of the model on the test images: {} %'.format((correct / total) * 100))
+
+    # Save the model and plot
+    torch.save(pilotModel.state_dict(), model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed))
 
 
-    if type_image == 'cropped':
-        img_shape = (65, 160, 3)
-    else:
-        img_shape = (120, 160, 3)
-
-
-    # Adapt the data
-    array_annotations, array_imgs = preprocess_data(array_annotations, array_imgs)
-    # x = x[:]
-
-
-    # START NORMALIZE DATA
-    array_annotations_v = []
-    array_annotations_w = []
-
-    for annotation in array_annotations:
-    array_annotations_v.append(annotation[0])
-    array_annotations_w.append(annotation[1])
-    
-    array_annotations_v = np.stack(array_annotations_v, axis=0)
-    array_annotations_v = array_annotations_v.reshape(-1, 1)
-
-    array_annotations_w = np.stack(array_annotations_w, axis=0)
-    array_annotations_w = array_annotations_w.reshape(-1, 1)
-
-    def normalize(x):
-        x = np.asarray(x)
-        return (x - x.min()) / (np.ptp(x))
-    normalized_X = normalize(array_annotations_v)
-    # normalized_Y = normalize(array_annotations_w)
-    old_min = array_annotations_w.min()
-    old_range = array_annotations_w.max() - old_min
-
-    new_min = -1
-    new_range = 2
-    normalized_Y = [(n - old_min) / old_range * new_range + new_min for n in array_annotations_w]
-    normalized_Y = np.array(normalized_Y)
-
-    normalized_annotations = []
-    for i in range(0, len(normalized_X)):
-    normalized_annotations.append([normalized_X.item(i), normalized_Y.item(i)])
-
-    normalized_annotations = np.stack(normalized_annotations, axis=0)
-    array_annotations = normalized_annotations
-    # END NORMALIZE DATA
-
-    split_test_train_value = 0.30
-    #images_train, images_validation, annotations_train, annotations_validation = \
-    #    train_test_split(array_imgs, array_annotations, test_size=0.30, random_state=42)
-    # FOR LSTMs -> suffle=False because the order of images is relevant
-    images_train, images_validation, annotations_train, annotations_validation = \
-        train_test_split(array_imgs, array_annotations, test_size=split_test_train_value, random_state=42, shuffle=False)
-    #images_train, images_validation, annotations_train, annotations_validation = \
-    #    train_test_split(array_2_images, array_annotations, test_size=0.30, random_state=42)
-
-    # Adapt the data
-    images_train = np.stack(images_train, axis=0)
-    annotations_train = np.stack(annotations_train, axis=0)
-    images_validation = np.stack(images_validation, axis=0)
-    annotations_validation = np.stack(annotations_validation, axis=0)
-
-    print(annotations_train[0])
-    print(annotations_train.shape)
-
-    #video = np.stack(array_imgs, axis=0)
-    print(images_train.shape)
-    print(images_validation.shape)
+        
