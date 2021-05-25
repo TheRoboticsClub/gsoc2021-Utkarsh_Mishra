@@ -21,8 +21,11 @@ def parse_args():
 
     parser.add_argument("--data_dir", type=str, default='../datasets/complete_dataset', help="Directory to find Data")
     parser.add_argument("--curve_dir", type=str, default='../datasets/curves_only', help="Directory to find Curves data")
-    parser.add_argument("--model_path", type=str, default='./trained_models', help="Directory to store model")
-    parser.add_argument("--base_dir", type=str, default='./log/', help="Directory to store tensorboard")
+    parser.add_argument("--model_path", type=str, default='trained_models', help="Directory to store model")
+    parser.add_argument("--log_dir", type=str, default='log', help="Directory to store tensorboard")
+    parser.add_argument("--base_dir", type=str, default='exp_random', help="Directory to save everything")
+    parser.add_argument("--comment", type=str, default='Random Experiment', help="Comment to know the experiment")
+
 
     parser.add_argument("--num_epochs", type=int, default=5, help="Number of Epochs")
     parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate for Policy Net")
@@ -30,6 +33,7 @@ def parse_args():
     parser.add_argument("--shuffle", type=bool, default=False, help="Shuffle dataset")
     parser.add_argument("--batch_size", type=int, default=256, help="Batch size")
     parser.add_argument("--save_iter", type=int, default=50, help="Iterations to save the model")
+    parser.add_argument("--print_terminal", type=bool, default=False, help="Print progress in terminal")
     parser.add_argument("--seed", type=int, default=123, help="Seed for reproducing")
 
     args = parser.parse_args()
@@ -39,14 +43,21 @@ if __name__=="__main__":
 
     args = parse_args()
 
+    exp_setup = vars(args)
+
     # Base Directory
     path_to_data = args.data_dir
     path_to_data_curves = args.curve_dir
-    model_save_dir = args.model_path
-    base_dir = args.base_dir
+    base_dir = './experiments/'+ args.base_dir + '/'
+    model_save_dir = base_dir + args.model_path
+    log_dir = base_dir + args.log_dir
 
-    check_path(model_save_dir)
     check_path(base_dir)
+    check_path(log_dir)
+    check_path(model_save_dir)
+
+    with open(base_dir+'args.json', 'w') as fp:
+        json.dump(exp_setup, fp)
 
     # Hyperparameters
     num_epochs = args.num_epochs
@@ -56,13 +67,14 @@ if __name__=="__main__":
     shuffle_dataset = args.shuffle
     save_iter = args.save_iter
     random_seed = args.seed
+    print_terminal = args.print_terminal
 
     # Device Selection (CPU/GPU)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     FLOAT = torch.FloatTensor
 
     # Tensorboard Initialization
-    writer = SummaryWriter(base_dir)
+    writer = SummaryWriter(log_dir)
 
     # Define data transformations
     transformations = transforms.Compose([
@@ -131,7 +143,7 @@ if __name__=="__main__":
             writer.add_scalar("performance/accuracy", current_acc, global_iter)
             writer.add_scalar("training/epochs", epoch+1, global_iter)
 
-            if (i + 1) % 100 == 0:
+            if print_terminal and (i + 1) % 100 == 0:
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Accuracy: {:.2f}%'
                     .format(epoch + 1, num_epochs, i + 1, total_step, loss.item(),
                             (correct / total) * 100))
