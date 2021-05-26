@@ -5,9 +5,23 @@ The RL algorithms are modular and can adapt to environments with vector based ob
 
 ## Sample Environment
 
-## Running the code
+This is a sample gym environment with both pixel based observations and state vector. The environment typically represents a robot with active
+perception and state estimation. To install the environment
 
 ```
+source ~/pyenvs/gsoc21/bin/activate
+cd gsoc21code/RL_algorithms/
+pip install -e sample-env
+```
+
+There are two environments:
+- Env ID 'sampleEnv-v0': Sample environment with continuous action space (for DDPG and PPO) 
+- Env ID 'sampleEnv-v1': Sample environment with discrete action space (for DQN and PPO) 
+
+## Hyperparameters for the code
+
+```
+# For all the algorithms (default to DQN)
 -h, --help                                      show this help message and exit
 --env_id                  ENV_ID                Environment Id
 --algorithm               ALGORITHM             Algorithm to run
@@ -28,14 +42,26 @@ The RL algorithms are modular and can adapt to environments with vector based ob
 --model_path              MODEL_PATH            Directory to store model
 --log_path                LOG_PATH              Directory to save logs
 --seed                    SEED                  Seed for reproducing
+
+# For DDPG specific algorithm
+
 --lr_p                    LR_P                  Learning rate for Policy Net
 --lr_v                    LR_V                  Learning rate for Value Net
 --polyak                  POLYAK                Interpolation factor in polyak averaging for target networks
 --update_step             UPDATE_STEP           Steps between updating policy and critic
 --action_noise            ACTION_NOISE          Std for noise of action
+
+# For PPO specific algorithm
+
 --tau                     TAU                   GAE factor
 --epsilon_ppo             EPSILON_PPO           Clip rate for PPO
 --batch_size_ppo          BATCH_SIZE_PPO        Batch size for PPO
 --ppo_mini_batch_size     PPO_MINI_BATCH_SIZE   PPO mini-batch size (default 0 -> don't use mini-batch update)
 --ppo_epochs              PPO_EPOCHS            PPO step
+```
+
+## Running the Code
+
+```
+
 ```
