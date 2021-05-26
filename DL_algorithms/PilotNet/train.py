@@ -19,8 +19,8 @@ import numpy as np
 def parse_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--data_dir", type=str, default='../datasets/complete_dataset', help="Directory to find Data")
-    parser.add_argument("--curve_dir", type=str, default='../datasets/curves_only', help="Directory to find Curves data")
+    parser.add_argument("--data_dir", type=str, default='../datasets/PilotNet/complete_dataset', help="Directory to find Data")
+    parser.add_argument("--curve_dir", type=str, default='../datasets/PilotNet/curves_only', help="Directory to find Curves data")
     parser.add_argument("--model_path", type=str, default='trained_models', help="Directory to store model")
     parser.add_argument("--log_dir", type=str, default='log', help="Directory to store tensorboard")
     parser.add_argument("--base_dir", type=str, default='exp_random', help="Directory to save everything")

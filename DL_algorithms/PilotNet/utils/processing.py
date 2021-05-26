@@ -8,8 +8,7 @@ from tqdm import tqdm
 def load_data(folder):
     name_folder = folder + '/Images/'
     list_images = glob.glob(name_folder + '*')
-    # print(list_images)
-    images = sorted(list_images, key=lambda x: int(x.split('/')[4].split('.png')[0]))
+    images = sorted(list_images, key=lambda x: int(x.split('/')[-1].split('.png')[0]))
     name_file = folder + '/data.json'
     file = open(name_file, 'r')
     data = file.read()
