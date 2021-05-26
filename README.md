@@ -6,6 +6,8 @@ This branch contains all the works done during the community bonding period.
 It contains some deep learning regression models and reinforcement learning algorithm implementations with custom environments.
 The RL algorithms are modular and can adapt to environments with vector based observations, pixel based observation or both simultaneously. 
 
+Blog Post: [https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Community-Bonding-Week-1/](https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Community-Bonding-Week-1/)
+
 ## Structure of the branch
 
     ├── DL_algorithms
