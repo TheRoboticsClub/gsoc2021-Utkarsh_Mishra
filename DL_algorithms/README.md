@@ -86,16 +86,41 @@ cd gsoc21code/DL_algorithms/
 # For PilotNet
 
 cd PilotNet
-python train.py 
+python train.py --data_dir ../datasets/PilotNet/complete_dataset
+                --curve_dir ../datasets/PilotNet/curves_only     
+                --model_path trained_models   
+                --log_dir log       
+                --base_dir 26May1      
+                --comment 'Started with the testing'      
+                --num_epochs 50   
+                --lr 3e-3           
+                --test_split 0.2   
+                --shuffle True      
+                --batch_size 256   
+                --save_iter 50    
+                --print_terminal True
+                --seed 123         
 
 
 # For DeepPilot
 
 cd DeepPilot
-python train.py 
+python train.py --data_dir ../datasets/DeepPilot/   
+                --model_path trained_models   
+                --log_dir log       
+                --base_dir 26May1      
+                --comment 'Started with the testing'      
+                --num_epochs 50   
+                --lr 3e-3           
+                --test_split 0.2   
+                --shuffle True      
+                --batch_size 256   
+                --save_iter 50    
+                --print_terminal True
+                --seed 123  
 
 
 ```
 
 The results are saved in the `./experiments/` directory and the structure is given below. 
-Tensorboard can be launched with `./experiments/log` directory.
+Tensorboard can be launched with `./experiments/base_dir/log` directory.
