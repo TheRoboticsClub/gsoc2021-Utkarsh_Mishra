@@ -1,12 +1,12 @@
-## GSoC 2021 Utkarsh A. Mishra
+# GSoC 2021 Utkarsh A. Mishra
 
-# Information regarding this branch
+## Information regarding this branch
 
 This branch contains all the works done during the community bonding period.
 It contains some deep learning regression models and reinforcement learning algorithm implementations with custom environments.
 The RL algorithms are modular and can adapt to environments with vector based observations, pixel based observation or both simultaneously. 
 
-# Structure of the branch
+## Structure of the branch
 
     ├── DL_algorithms
     |   ├── DeepPilot                               # Test files (alternatively `spec` or `tests`)
@@ -47,10 +47,20 @@ The RL algorithms are modular and can adapt to environments with vector based ob
     └── docs                                                            
         └── references                              # Load and stress tests
 
-# Setting up this branch
+## Setting up this branch
 
+Best to setup a virtual environment with python 3.6
 
+```
+cd ~ && mkdir pyenvs && cd pyenvs
+pip install virtualenv
+virtualenv gsoc21 --python=python3
 
+cd ~
+git clone https://github.com/TheRoboticsClub/gsoc2021-Utkarsh_Mishra/ gsoc21code
+git checkout community_bonding
+source ~/pyenvs/gsoc21/bin/activate
+python3 -m pip install -r requirements.txt
+```
 
-
-# References
+## References
