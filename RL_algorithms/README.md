@@ -1,7 +1,41 @@
 # RL Algorithms: Implementation and Baseline
 
-This branch contains all the works done during the community bonding period.
-It contains some deep learning regression models and reinforcement learning algorithm implementations with custom environments.
+It contains some Reinforcement Learning algorithm implementations with custom environments.
 The RL algorithms are modular and can adapt to environments with vector based observations, pixel based observation or both simultaneously. 
 
-# Running the code
+## Sample Environment
+
+## Running the code
+
+```
+-h, --help                                      show this help message and exit
+--env_id                  ENV_ID                Environment Id
+--algorithm               ALGORITHM             Algorithm to run
+--render                  RENDER                Render environment or not
+--num_process             NUM_PROCESS           Number of process to run environment
+--lr                      LR                    Learning rate for Policy Net
+--gamma                   GAMMA                 Discount factor
+--epsilon                 EPSILON               Probability controls greedy action
+--explore_size            EXPLORE_SIZE          Explore steps before execute deterministic policy
+--memory_size             MEMORY_SIZE           Size of replay memory
+--step_per_iter           STEP_PER_ITER         Number of steps of interaction in each iteration
+--batch_size              BATCH_SIZE            Batch size
+--min_update_step         MIN_UPDATE_STEP       Minimum interacts for updating
+--update_target_gap       UPDATE_TARGET_GAP     Steps between updating target q net
+--max_iter                MAX_ITER              Maximum iterations to run
+--eval_iter               EVAL_ITER             Iterations to evaluate the model
+--save_iter               SAVE_ITER             Iterations to save the model
+--model_path              MODEL_PATH            Directory to store model
+--log_path                LOG_PATH              Directory to save logs
+--seed                    SEED                  Seed for reproducing
+--lr_p                    LR_P                  Learning rate for Policy Net
+--lr_v                    LR_V                  Learning rate for Value Net
+--polyak                  POLYAK                Interpolation factor in polyak averaging for target networks
+--update_step             UPDATE_STEP           Steps between updating policy and critic
+--action_noise            ACTION_NOISE          Std for noise of action
+--tau                     TAU                   GAE factor
+--epsilon_ppo             EPSILON_PPO           Clip rate for PPO
+--batch_size_ppo          BATCH_SIZE_PPO        Batch size for PPO
+--ppo_mini_batch_size     PPO_MINI_BATCH_SIZE   PPO mini-batch size (default 0 -> don't use mini-batch update)
+--ppo_epochs              PPO_EPOCHS            PPO step
+```

@@ -15,7 +15,6 @@ from utils.replay_memory import Memory
 from utils.env_util import get_env_info, get_pixel_env_info
 from utils.file_util import check_path
 from utils.torch_util import device, FLOAT
-from utils.zfilter import ZFilter
 
 
 class DDPG:

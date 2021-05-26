@@ -54,9 +54,7 @@ class PPO:
 
     def _init_model(self):
         """init model from parameters"""
-        # seeding
-        torch.manual_seed(self.seed)
-        self.env.seed(self.seed)
+        
         if self.obs_type == 'pixel':
             self.env, env_continuous, obs_shape, num_states, num_actions = get_pixel_env_info(self.env_id)
 
@@ -76,6 +74,9 @@ class PPO:
                     num_states[0], num_actions).to(device)
 
             self.value_net = PPOValue(num_states[0]).to(device)
+
+        torch.manual_seed(self.seed)
+        self.env.seed(self.seed)
 
         if self.model_path:
             print("Loading Saved Model {}_ppo.p".format(self.env_id))
