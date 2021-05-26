@@ -63,5 +63,75 @@ There are two environments:
 ## Running the Code
 
 ```
+source ~/pyenvs/gsoc21/bin/activate
+cd gsoc21code/RL_algorithms/
 
+# For DQN
+
+python main.py --env_id sampleEnv-v1
+            --algorithm DQN
+            --render False 
+            --num_process 1 
+            --lr 3e-3
+            --gamma 0.99 
+            --epsilon 0.90
+            --explore_size 5000 
+            --memory_size 100000
+            --step_per_iter 1000 
+            --batch_size 256
+            --min_update_step 1000 
+            --update_target_gap 50
+            --max_iter 1000
+            --eval_iter 50
+            --save_iter 50
+            --model_path trained_models
+            --log_path log/ 
+            --seed 1234
+
+# For DDPG
+
+python main.py --env_id sampleEnv-v0
+            --algorithm DDPG
+            --render False 
+            --num_process 1 
+            --lr_p 3e-3
+            --lr_v 3e-3
+            --gamma 0.99
+            --polyak 0.995
+            --explore_size 5000 
+            --memory_size 100000
+            --step_per_iter 1000
+            --batch_size 256
+            --min_update_step 1000 
+            --update_step 50
+            --max_iter 1000
+            --eval_iter 50
+            --save_iter 50
+            --action_noise 0.1 
+            --model_path trained_models
+            --log_path log/ 
+            --seed 1234
+
+# For PPO
+
+python main.py --env_id sampleEnv-v0
+            --algorithm PPO
+            --render False 
+            --num_process 4 
+            --lr_p 3e-3
+            --lr_v 3e-3
+            --gamma 0.99
+            --tau 0.95
+            --epsilon_ppo 0.2
+            --batch_size_ppo 4000
+            --ppo_mini_batch_size 256  
+            --ppo_epochs 10
+            --max_iter 1000
+            --eval_iter 50
+            --save_iter 50
+            --model_path trained_models
+            --log_path log/ 
+            --seed 1234
 ```
+
+The results are saved in the `./experiments/` directory. Tensorboard can be launched with `./experiments/log` directory.

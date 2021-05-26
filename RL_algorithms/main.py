@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument("--eval_iter", type=int, default=1, help="Iterations to evaluate the model")
     parser.add_argument("--save_iter", type=int, default=1, help="Iterations to save the model")
     parser.add_argument("--model_path", type=str, default="trained_models", help="Directory to store model")
-    parser.add_argument("--log_path", type=str, default="./log/", help="Directory to save logs")
+    parser.add_argument("--log_path", type=str, default="log/", help="Directory to save logs")
     parser.add_argument("--seed", type=int, default=123, help="Seed for reproducing")
 
     ## For DDPG
@@ -54,7 +54,7 @@ def parse_args():
 
 def runDQN(env_id, render, num_process, lr, gamma, epsilon, explore_size, memory_size, step_per_iter, batch_size,
          min_update_step, update_target_gap, max_iter, eval_iter, save_iter, model_path, log_path, seed):
-    base_dir = log_path + env_id + "/DQN_exp{}".format(seed)
+    base_dir = './experiments/' + log_path + env_id + "/DQN_exp{}".format(seed)
     writer = SummaryWriter(base_dir)
     dqn = DQN(env_id,
               render=render,
@@ -77,13 +77,13 @@ def runDQN(env_id, render, num_process, lr, gamma, epsilon, explore_size, memory
             dqn.eval(i_iter, render=render)
 
         if i_iter % save_iter == 0:
-            dqn.save(model_path)
+            dqn.save('./experiments/' + model_path)
 
         torch.cuda.empty_cache()
 
 def runDDPG(env_id, render, num_process, lr_p, lr_v, gamma, polyak, explore_size, memory_size, step_per_iter, batch_size,
          min_update_step, update_step, max_iter, eval_iter, save_iter, action_noise, model_path, log_path, seed):
-    base_dir = log_path + env_id + "/DDPG_exp{}".format(seed)
+    base_dir = './experiments/' + log_path + env_id + "/DDPG_exp{}".format(seed)
     writer = SummaryWriter(base_dir)
 
     ddpg = DDPG(env_id,
@@ -109,13 +109,13 @@ def runDDPG(env_id, render, num_process, lr_p, lr_v, gamma, polyak, explore_size
             ddpg.eval(i_iter, render=render)
 
         if i_iter % save_iter == 0:
-            ddpg.save(model_path)
+            ddpg.save('./experiments/' + model_path)
 
         torch.cuda.empty_cache()
 
 def runPPO(env_id, render, num_process, lr_p, lr_v, gamma, tau, epsilon, batch_size,
          ppo_mini_batch_size, ppo_epochs, max_iter, eval_iter, save_iter, model_path, log_path, seed):
-    base_dir = log_path + env_id + "/PPO_exp{}".format(seed)
+    base_dir = './experiments/' + log_path + env_id + "/PPO_exp{}".format(seed)
     writer = SummaryWriter(base_dir)
 
     ppo = PPO(env_id=env_id,
@@ -138,10 +138,10 @@ def runPPO(env_id, render, num_process, lr_p, lr_v, gamma, tau, epsilon, batch_s
             ppo.eval(i_iter, render=render)
 
         if i_iter % save_iter == 0:
-            ppo.save(model_path)
+            ppo.save('./experiments/' + model_path)
 
             pickle.dump(ppo,
-                        open('{}/{}_ppo.p'.format(model_path, env_id), 'wb'))
+                        open('{}/{}_ppo.p'.format('./experiments/' + model_path, env_id), 'wb'))
 
         torch.cuda.empty_cache()
 
