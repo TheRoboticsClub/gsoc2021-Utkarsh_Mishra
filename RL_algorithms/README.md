@@ -15,8 +15,8 @@ pip install -e sample-env
 ```
 
 There are two environments:
-- Env ID 'sampleEnv-v0': Sample environment with continuous action space (for DDPG and PPO) 
-- Env ID 'sampleEnv-v1': Sample environment with discrete action space (for DQN and PPO) 
+- Env ID `sampleEnv-v0`: Sample environment with continuous action space (for DDPG and PPO) 
+- Env ID `sampleEnv-v1`: Sample environment with discrete action space (for DQN and PPO) 
 
 ## Hyperparameters for the code
 
