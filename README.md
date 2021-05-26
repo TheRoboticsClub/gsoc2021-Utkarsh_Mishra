@@ -9,43 +9,46 @@ The RL algorithms are modular and can adapt to environments with vector based ob
 ## Structure of the branch
 
     ├── DL_algorithms
-    |   ├── DeepPilot                               # Test files (alternatively `spec` or `tests`)
+    |   ├── DeepPilot                               # Deep Pilot pytorch implementation
     |   |   ├── utils                               
-    |   |   |   ├── deep_pilot_dataset.py           # Test files (alternatively `spec` or `tests`)
-    |   |   |   ├── deeppilot.py                    # Test files (alternatively `spec` or `tests`)
-    |   |   |   └── processing.py                   # Test files (alternatively `spec` or `tests`)
-    |   |   └── train.py                            # Test files (alternatively `spec` or `tests`)
-    |   └── PilotNet                                
+    |   |   |   ├── deep_pilot_dataset.py           # Torchvision custom dataset
+    |   |   |   ├── deeppilot.py                    # CNN for Deep Pilot
+    |   |   |   └── processing.py                   # Data collecting, processing and utilities
+    |   |   └── train.py                            # training code
+    |   |
+    |   └── PilotNet                                # Pilot Net pytorch implementation
     |       ├── utils                               
-    |       |   ├── pilot_net_dataset.py            # Test files (alternatively `spec` or `tests`)
-    |       |   ├── pilotnet.py                     # Test files (alternatively `spec` or `tests`)
-    |       |   └── processing.py                   # Test files (alternatively `spec` or `tests`)
-    |       └── train.py                            # Test files (alternatively `spec` or `tests`)
+    |       |   ├── pilot_net_dataset.py            # Torchvision custom dataset
+    |       |   ├── pilotnet.py                     # CNN for Deep Pilot
+    |       |   └── processing.py                   # Data collecting, processing and utilities
+    |       └── train.py                            # training code
+    |
     ├── RL_algorithms                               
     |   ├── DDPG                                    
-    |   |   ├── ddpg.py                             # Test files (alternatively `spec` or `tests`)
-    |   |   └── ddpg_step.py                        # Test files (alternatively `spec` or `tests`)
+    |   |   ├── ddpg.py                             # DDPG pytorch implementation
+    |   |   └── ddpg_step.py                        # Single update step of DDPG
     |   ├── DQN                                     
-    |   |   ├── dqn.py                              # Test files (alternatively `spec` or `tests`)
-    |   |   └── dqn_step.py                         # Test files (alternatively `spec` or `tests`)
+    |   |   ├── dqn.py                              # DQN pytorch implementation
+    |   |   └── dqn_step.py                         # Single update step of DQN
     |   ├── PPO                                     
-    |   |   ├── ppo.py                              # Test files (alternatively `spec` or `tests`)
-    |   |   └── ppo_step.py                         # Test files (alternatively `spec` or `tests`)    
+    |   |   ├── ppo.py                              # PPO pytorch implementation
+    |   |   └── ppo_step.py                         # Single update step of PPO
     |   ├── models                                  
-    |   |   ├── image_policies.py                   # Test files (alternatively `spec` or `tests`)
-    |   |   ├── policies.py                         # Test files (alternatively `spec` or `tests`)
-    |   |   ├── image_values.py                     # Test files (alternatively `spec` or `tests`)
-    |   |   └── values.py                           # Test files (alternatively `spec` or `tests`)
+    |   |   ├── image_policies.py                   # Image encoder + state policies
+    |   |   ├── policies.py                         # Standard state vector policies
+    |   |   ├── image_values.py                     # Image encoder + state + action value functions
+    |   |   └── values.py                           # Standard state + action vector value functions
     |   ├── utils                                   
-    |   |   ├── GAE.py                              # Test files (alternatively `spec` or `tests`)
-    |   |   ├── MemoryCollector.py                  # Test files (alternatively `spec` or `tests`)
-    |   |   ├── replay_memory.py                    # Test files (alternatively `spec` or `tests`)
-    |   |   └── *_utils_.py                         # Test files (alternatively `spec` or `tests`)
+    |   |   ├── GAE.py                              # Generalized advantage estimation
+    |   |   ├── MemoryCollector.py                  # Memory collector with multiple cpu threads
+    |   |   ├── replay_memory.py                    # replay memory buffer
+    |   |   └── *_utils_.py                         # utility files
     |   ├── sample-env                              
-    |   |   └── (Custom Gym Env)                    # Test files (alternatively `spec` or `tests`)
-    |   └── main.py                                 # Test files (alternatively `spec` or `tests`)
+    |   |   └── (Custom Gym Env)                    # Custom Gym environment with mixed pixel observations
+    |   |                                           # and vector states
+    |   └── main.py                                 # main RL code with modular arguments
     └── docs                                                            
-        └── references                              # Load and stress tests
+        └── references                              # reference paper PDFs
 
 ## Setting up this branch
 
