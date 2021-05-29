@@ -104,3 +104,26 @@ Finally the results were obtained on the more complicated circuit with many curv
 {: .text-justify}
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Wt91LbLdzRU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## References
+
+[1] [https://github.com/JdeRobot/BehaviorMetrics/pull/157](https://github.com/JdeRobot/BehaviorMetrics/pull/157) \\
+[2] [https://github.com/TheRoboticsClub/gsoc2021-Utkarsh_Mishra](https://github.com/TheRoboticsClub/gsoc2021-Utkarsh_Mishra) \\
+[3] [https://github.com/JdeRobot/BehaviorMetrics](https://github.com/JdeRobot/BehaviorMetrics) \\
+[4] [https://github.com/JdeRobot/DL_studio](https://github.com/JdeRobot/DL_studio) \\
+[5] [https://github.com/JdeRobot/BehaviorMetrics/issues/158](https://github.com/JdeRobot/BehaviorMetrics/issues/158) \\
+[6] Bojarski, Mariusz, et al. "End to end learning for self-driving cars." arXiv:1604.07316 (2016).
+[https://arxiv.org/abs/1604.07316](https://arxiv.org/abs/1604.07316) \\
+[7] Rojas-Perez, L.O., & Martinez-Carranza, J. (2020). DeepPilot: A CNN for Autonomous Drone Racing. Sensors, 20(16), 4524. [https://doi.org/10.3390/s20164524](https://doi.org/10.3390/s20164524)
+{: .text-justify}
+
+## Issues and Pull Requests
+
+### Pull Requests Updated
+
+- [https://github.com/JdeRobot/BehaviorMetrics/pull/157](https://github.com/JdeRobot/BehaviorMetrics/pull/157)
+
+### Pull Requests Created
+
+- [https://github.com/JdeRobot/BehaviorMetrics/pull/170](https://github.com/JdeRobot/BehaviorMetrics/pull/170)
+- [https://github.com/JdeRobot/DL-Studio/pull/1](https://github.com/JdeRobot/DL-Studio/pull/1)
