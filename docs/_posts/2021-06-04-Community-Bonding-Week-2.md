@@ -32,7 +32,7 @@ This week was all about analyzing last week's results, strengthening RL baseline
 - [x] Setting Up server for future computations
 - [x] Ablation study of Pilot-Net on multiple brains
 
-### Preliminaries about RL
+## Preliminaries about RL
 
 Reinforcement Learning (RL) is a strategy by learning based on interactions and feedback. Let's consider an agent in an unknown environment and it can obtain some rewards (positive feedback) by interacting with the environment. Following a fundamental strategy, the agent ought to take actions so as to maximize cumulative rewards. In our case, this scenario is a F1-racing car trying to maximize the cummulative reward by the following the line and moving forward in the race track. A figure showing such an interaction is given below.
 {: .text-justify}
@@ -43,7 +43,7 @@ The agent a.k.a. the racing car observes an observation i.e. the current state o
 ![]({{ site.url }}{{ site.baseurl }}/assets/images/blogs/rl_intro.png)
 
 
-### Preliminaries about OpenAI-GYM Environments
+## Preliminaries about OpenAI-GYM Environments
 
 The OpenAI Gym [2] framework provides libraries to design structured agent-environment settings, interactions and feedbacks. It helps in the design of effective reinforcement learning agents. In the concerned work, a sample custom environment was made with the help of custom environment settings provided by OpenAI Gym. A tyical custom environment architecture consists of:
 {: .text-justify}
@@ -54,7 +54,7 @@ The OpenAI Gym [2] framework provides libraries to design structured agent-envir
 {: .text-justify}
 
 
-### Custom RL pipeline preparation
+## Custom RL pipeline preparation
 
 The pipeline we are concerned of deals with both sensor based observations and the internal state of the robot. So, the overall state-vector for such a setting should consist of information from all of cameras images, laser distances and velocities of the robot. Thus the modified actor for our formulation has the capability of having all kinds of informations together and is shown in the figure below. 
 {: .text-justify}
@@ -75,12 +75,12 @@ The current implementation consists of 4 algorithms [3] in PyTorch:
 {: .text-justify}
 - **Proximal Policy Optimization**[6]: On-Policy learning algorithm which can work for both discrete and continuous actions. 
 
-### Setting up Tamino Server
+## Setting up Tamino Server
 
 I am grateful to my mentors and the URJC team to provide me access to their Tamino server for all my computational requirements. I feel very positive to have a high computational capacity system with 8 core CPUs and a Nvidia 1080 GPU. So this week was spent in setting up ROS-Noetic and Behavior Metrics into the server system and setting up appropriate visualizations using the guidelines in [7].
 {: .text-justify}
 
-### Simulation Analysis and Results
+## Simulation Analysis and Results
 
 Just for some visuals, the video below shows the PilotNet brain completing Montreal Circuit and failing at a difficult corner at the Montmelo circuit. Well, this validates the baseline PilotNet on pytorch:
 {: .text-justify}
