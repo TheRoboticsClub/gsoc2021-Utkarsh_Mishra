@@ -17,11 +17,11 @@ class PilotNetDataset(Dataset):
 
         self.images = []
         self.images = get_images(all_images, type_image, self.images)
-        # self.images = get_images(all_images_curve, type_image, self.images)
+        self.images = get_images(all_images_curve, type_image, self.images)
 
         self.labels = []
         self.labels = parse_json(all_data, self.labels)
-        # self.labels = parse_json(all_data_curve, self.labels)
+        self.labels = parse_json(all_data_curve, self.labels)
 
         self.labels, self.images = preprocess_data(self.labels, self.images)
 
@@ -38,7 +38,7 @@ class PilotNetDataset(Dataset):
 
         all_imgs = []
 
-        for iter in range(4):
+        for iter in range(self.horizon):
             img = self.images[index+iter]
             label = np.array(self.labels[index])
             data = Image.fromarray(img)
