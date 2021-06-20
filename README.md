@@ -5,7 +5,7 @@
 This branch contains all the works done during the first week period.
 It contains the DL pilotNet implementation with stacked image dataset.
 
-Blog Post: [https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Coding-Week-1/](https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Coding-Week-1/)
+Blog Post: [https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Coding-Period-Week-1/](https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Coding-Period-Week-1/)
 
 ## Structure of the branch
 
