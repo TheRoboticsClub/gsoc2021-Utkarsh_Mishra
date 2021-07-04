@@ -22,7 +22,7 @@ author: Utkarsh Mishra
 pinned: false
 ---
 
-Afetr adding all the new features to Behavior Metrics, this week was all about going back to PilotNet implementation and exploring various augmentations.
+After adding all the new features to Behavior Metrics, this week was all about going back to PilotNet implementation and exploring various augmentations.
 {: .text-justify}
 
 ## Objectives
@@ -30,7 +30,6 @@ Afetr adding all the new features to Behavior Metrics, this week was all about g
 - [x] Preliminaries and Explore Issues
 - [x] Solve Issues with Pull Requests
 - [x] Analyze the New Data Augmentations
-- [x] Some analysis on Stacked PilotNet
 
 ## Preliminaries and Explore Issues
 
@@ -112,19 +111,6 @@ Finally, the affine tranformation was added to further complicate the augmentati
 ![]({{ site.url }}{{ site.baseurl }}/assets/images/blogs/augs_v1/case3.png)
 
 ![]({{ site.url }}{{ site.baseurl }}/assets/images/blogs/augs_v1/loss.png)
-
-
-### PR 3: Added stacked PilotNet experiments
-
-
-{: .text-justify}
-
-### Stacked PilotNet Case 1: Only Gaussian Augmentation
-
-An example of the percentage completed plots for all the runs in simple_ciruit, many_curves and nurbergring circuits are given in the figure below:
-{: .text-justify}
-
-![]({{ site.url }}{{ site.baseurl }}/assets/images/blogs/augs_v1/case3.png)
 
 ## References
 
