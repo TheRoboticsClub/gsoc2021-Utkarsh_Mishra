@@ -129,10 +129,10 @@ author:
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      url: utkarsh75477@gmail.com
+      url: "utkarsh75477@gmail.com"
     - label: "About Me"
       icon: "fas fa-fw fa-link"
-      url: "utkarshmishra04.github.io"
+      url: "https://utkarshmishra04.github.io"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       url: "https://twitter.com/champ_utkarsh"
