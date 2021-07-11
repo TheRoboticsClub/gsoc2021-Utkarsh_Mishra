@@ -88,7 +88,7 @@ The stacked PilotNet brain, config and trained network weights were added and te
 A future line of thought is to modulate the dataset such that the brains get an intuition of when to follow a lesser speed and when to go for maximum speeds. The failure of my trained brains in montmelo circuit is shown in the second half of a previous video [2].
 {: .text-justify}
 
-### PR 3: Added explicut brain setup for drone 
+### PR 3: Added explicit brain setup for drone 
 
 This was an interesting task as it introduces drones in the Behavior Metrics framework. The pipeline of drones is a bit different from that of the F1 car. The `DroneWrapper` developed in [3] does most of the work and there are no explicit sensors or actuators which are required. Thus, this difference between the car and drone pipeline had to be taken care of and hence, proper condition statements were introduced in the base Behavior Metrics pipeline. I understood how:
 {: .text-justify}
