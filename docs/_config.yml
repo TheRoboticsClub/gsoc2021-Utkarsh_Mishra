@@ -122,9 +122,9 @@ analytics:
 # PROFILE
 # Site Author
 author:
-  name             : ""
+  name             : "Utkarsh A. Mishra"
   avatar           : "/assets/images/profile.jpg"
-  bio              : "Google summer of code 2021"
+  bio              : "Undergraduate Student at Indian Institute of Technology Roorkee and Google Summer of Code 2021 student at JdeRobot"
   location         : "India"
   links:
     - label: "Email"
@@ -135,13 +135,13 @@ author:
       url: "utkarshmishra04.github.io"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      url: ""
+      url: "https://twitter.com/champ_utkarsh"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/UtkarshMishra04"
-    #- label: "Youtube"
-    #  icon: "fab fa-fw fa-youtube"
-    #  url: "https://www.youtube.com/channel/UCgmUgpircYAv_QhLQziHJOQ"
+    - label: "Youtube"
+      icon: "fab fa-fw fa-youtube"
+      url: "https://www.youtube.com/channel/UCgmUgpircYAv_QhLQziHJOQ"
 
 
 #################################################################################
