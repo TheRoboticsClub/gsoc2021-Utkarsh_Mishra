@@ -25,7 +25,7 @@ url                      : https://theroboticsclub.github.io
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : JdeRobot
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
-logo                     : /gsoc2021-Utkarsh_Mishra/assets/images/logo.png
+logo                     : /assets/images/logo.png
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
