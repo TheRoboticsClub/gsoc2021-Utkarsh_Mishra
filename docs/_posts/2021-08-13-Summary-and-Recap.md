@@ -50,7 +50,12 @@ Randomization for various initial positions in script mode was extended to GUI m
 - [Blog Post 1](https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Coding-Period-Week-2/)
 - [Blog Post 2](https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Coding-Period-Week-4/)
 
-## PilotNet base and stacked setups
+## DeepLearningStudio: PilotNet base and stacked setups
 
+This was the most significant segment for this GSoC period. I was able to implement the PilotNet algorithm in PyTorch. This, along with the existing tensorflow version of the algorithm, was used to start the JdeRobot - DeepLearningStudio. Further, an extension of the base code was used to explore temporal relations without memory based LSTM algorithms. The stacked brain was a success however further modifications are still going on and is a future work. You can refer to the following: 
+{: .text-justify}
+- [Behavior Metrics PR #182, #183, #184, #185](https://github.com/JdeRobot/BehaviorMetrics)
+- [Blog Post 1](https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Coding-Period-Week-2/)
+- [Blog Post 2](https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/gsoc/Coding-Period-Week-4/)
 
 
