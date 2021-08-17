@@ -6,9 +6,9 @@ sidebar:
   nav: "docs"
 ---
 
-## Autonomous Driving drone with Gazebo using Deep Learning Techniques
+## Autonomous Driving Formula-one and Iris drone with Behavior Metrics and Deep Learning Studio
 
-Autonomous Driving drone with Gazebo using Deep Learning techniques
+Autonomous Driving Formula-one and Iris drone with Behavior Metrics and Deep Learning Studio
 
 ### ORGANIZATION
 JdeRobot - Universidad Rey Juan Carlos

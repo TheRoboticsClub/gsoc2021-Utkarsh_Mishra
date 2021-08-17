@@ -7,7 +7,7 @@ sidebar:
   nav: "docs"
 ---
 
-# Autonomous Driving drone with Behavior Metrics and DL-Studio using Deep Learning Techniques
+# Autonomous Driving Formula-one and Iris drone with Behavior Metrics and Deep Learning Studio
 
 ## Abstract
 
@@ -18,7 +18,7 @@ This project is based on JdeRobot Behavior Metrics [1] and DL-Studio [2] framewo
 ### References
 
 [1] [https://github.com/JdeRobot/BehaviorMetrics](https://github.com/JdeRobot/BehaviorMetrics) \\
-[2] [https://github.com/JdeRobot/DL_studio](https://github.com/JdeRobot/DL_studio) \\
+[2] [https://github.com/JdeRobot/DeepLearningStudio](https://github.com/JdeRobot/DeepLearningStudio) \\
 [3] [https://github.com/JdeRobot/drones](https://github.com/JdeRobot/drones) \\
 [4] Bojarski, Mariusz, et al. "End to end learning for self-driving cars." arXiv:1604.07316 (2016).
 [https://arxiv.org/abs/1604.07316](https://arxiv.org/abs/1604.07316) \\

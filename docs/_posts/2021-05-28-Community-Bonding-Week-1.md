@@ -42,7 +42,7 @@ I am setting up this blog [template](https://github.com/RoboticsLabURJC/colab-gs
 
 ## The Current Code Base
 
-The overall contribution of the project will be towards Behavior Metrics and [DL Studio](https://github.com/JdeRobot/DL_studio) [4]. Behavior Metrics is a generalized framework to test various kinds of Deep Learning(DL) and Reinforcement Learning (RL) "brains". Whereas DL Studio is a new repository which is aimed towards deveoping and storing specific DL brains and get those separated from Behavior Metrics. This will simplify the Behavior Metrics repository structure and will be more clean to work with. The current code structure is a bit unstructured in terms of the DL and RL brains in Behavior Metrics. Critical dependencies and builds on docker container gets messed up after some minor changes. This will be minorly fixed with this issue [5]. Moreover, the current framework is built on Tensorflow-2 Keras.
+The overall contribution of the project will be towards Behavior Metrics and [DL Studio](https://github.com/JdeRobot/DeepLearningStudio) [4]. Behavior Metrics is a generalized framework to test various kinds of Deep Learning(DL) and Reinforcement Learning (RL) "brains". Whereas DL Studio is a new repository which is aimed towards deveoping and storing specific DL brains and get those separated from Behavior Metrics. This will simplify the Behavior Metrics repository structure and will be more clean to work with. The current code structure is a bit unstructured in terms of the DL and RL brains in Behavior Metrics. Critical dependencies and builds on docker container gets messed up after some minor changes. This will be minorly fixed with this issue [5]. Moreover, the current framework is built on Tensorflow-2 Keras.
 {: .text-justify}
  
 ## Literature Review
@@ -110,7 +110,7 @@ Finally the results were obtained on the more complicated circuit with many curv
 [1] [https://github.com/JdeRobot/BehaviorMetrics/pull/157](https://github.com/JdeRobot/BehaviorMetrics/pull/157) \\
 [2] [https://github.com/TheRoboticsClub/gsoc2021-Utkarsh_Mishra](https://github.com/TheRoboticsClub/gsoc2021-Utkarsh_Mishra) \\
 [3] [https://github.com/JdeRobot/BehaviorMetrics](https://github.com/JdeRobot/BehaviorMetrics) \\
-[4] [https://github.com/JdeRobot/DL_studio](https://github.com/JdeRobot/DL_studio) \\
+[4] [https://github.com/JdeRobot/DeepLearningStudio](https://github.com/JdeRobot/DeepLearningStudio) \\
 [5] [https://github.com/JdeRobot/BehaviorMetrics/issues/158](https://github.com/JdeRobot/BehaviorMetrics/issues/158) \\
 [6] Bojarski, Mariusz, et al. "End to end learning for self-driving cars." arXiv:1604.07316 (2016).
 [https://arxiv.org/abs/1604.07316](https://arxiv.org/abs/1604.07316) \\

@@ -11,7 +11,7 @@ For installation, please refer to the individual repositories and appropriate us
 {: .text-justify}
 
 - Behavior Metric: [https://github.com/JdeRobot/BehaviorMetrics/tree/noetic-devel](https://github.com/JdeRobot/BehaviorMetrics/tree/noetic-devel)
-- DL-Studio: [https://github.com/JdeRobot/DL_studio](https://github.com/JdeRobot/DL_studio) 
+- DL-Studio: [https://github.com/JdeRobot/DeepLearningStudio](https://github.com/JdeRobot/DeepLearningStudio) 
 - CustomRobots: [https://github.com/JdeRobot/CustomRobots/tree/noetic-devel](https://github.com/JdeRobot/CustomRobots/tree/noetic-devel)
 - JdeRobot Drones: [https://github.com/JdeRobot/drones/tree/noetic-devel](https://github.com/JdeRobot/drones/tree/noetic-devel)
 - My personal DL-RL algorithms: [https://github.com/TheRoboticsClub/gsoc2021-Utkarsh_Mishra/tree/community_bonding](https://github.com/TheRoboticsClub/gsoc2021-Utkarsh_Mishra/tree/community_bonding)

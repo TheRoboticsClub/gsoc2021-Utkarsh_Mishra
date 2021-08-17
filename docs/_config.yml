@@ -16,16 +16,16 @@ minimal_mistakes_skin    : "air"
 
 # Site Settings
 #locale                   : "en-US"
-title                    : "Robotics Lab URJC"
+title                    : "JdeRobot - Google Summer of Code 2021"
 title_separator          : "-"
 subtitle                 : Programming Robot Intelligence
-name                     : "JdeRobot"
+name                     : "JdeRobot - Google Summer of Code 2021"
 description              : "Programming Robot Intelligence"
-url                      : https://theroboticsclub.github.io 
+url                      : https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : JdeRobot
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
-logo                     : /assets/images/peloto.png
+logo                     : /assets/images/logo.png
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200

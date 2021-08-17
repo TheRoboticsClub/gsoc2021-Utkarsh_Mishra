@@ -3,12 +3,12 @@ layout: splash
 permalink: /
 header:
   overlay_color: "#5e616c"
-  overlay_image: /assets/images/cover/peloto_texto.png
+  overlay_image: /assets/images/cover/header.png
   actions:
     #- label: "<i class='fas fa-download'></i> Install now"
     #  url: "/installation/"
 excerpt: 
-  Autonomous Driving drone with Gazebo using Deep Learning Techniques
+  Autonomous Driving Formula-one and Iris drone with Behavior Metrics and Deep Learning Studio
 feature_row:
   - image_path: /assets/images/cover/logbook.jpg
     alt: "Logbook"
