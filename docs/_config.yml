@@ -21,7 +21,7 @@ title_separator          : "-"
 subtitle                 : Programming Robot Intelligence
 name                     : "JdeRobot - Google Summer of Code 2021"
 description              : "Programming Robot Intelligence"
-url                      : https://theroboticsclub.github.io/gsoc2021-Utkarsh_Mishra/
+url                      : https://theroboticsclub.github.io
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : JdeRobot
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
